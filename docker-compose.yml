@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  mariadb-primary:
+    image: mariadb:11.4
+    container_name: mariadb-primary
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_DATABASE: testdb
+      # Creates the replication user automatically
+      MARIADB_REPLICATION_USER: repl_user
+      MARIADB_REPLICATION_PASSWORD: replpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - primary_data:/var/lib/mysql
+    command: --server-id=1 --log-bin=mysql-bin --log-basename=master-bin --binlog-format=mixed
+
+volumes:
+  primary_data:
+
