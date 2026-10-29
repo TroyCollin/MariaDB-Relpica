@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  mariadb-replica:
+    image: mariadb:11.4
+    container_name: mariadb-replica
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      # Directs the container to the external host ip
+      MARIADB_MASTER_HOST: 192.168.5.45 
+      MARIADB_MASTER_PORT: 3306
+      MARIADB_REPLICATION_USER: repl_user
+      MARIADB_REPLICATION_PASSWORD: replpassword
+    ports:
+      - "3306:3306" # Can use standard 3306 here since it's on a different host
+    volumes:
+      - replica_data:/var/lib/mysql
+    command: --server-id=2 --log-basename=replica-bin
+
+volumes:
+  replica_data:
+
